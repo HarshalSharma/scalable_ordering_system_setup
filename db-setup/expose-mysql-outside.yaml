@@ -1,0 +1,41 @@
+# LOADBALANCER EXPOSED SERVICES
+# Headless service for stable DNS entries of StatefulSet members.
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-write-lb-service
+  namespace: mysql
+  labels:
+    app: mysql
+    app.kubernetes.io/name: mysql
+spec:
+  selector:
+    podName: mysql-0
+  type: LoadBalancer
+  ports:
+  - name: mysql
+    port: 3306
+    targetPort: 3306
+  selector:
+    app: mysql
+---
+# Client service for connecting to any MySQL instance for reads.
+# For writes, you must instead connect to the primary: mysql-0.mysql.
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-read-lb-service
+  namespace: mysql
+  labels:
+    app: mysql
+    app.kubernetes.io/name: mysql
+    readonly: "true"
+spec:
+  type: LoadBalancer
+  ports:
+  - name: mysql
+    port: 3307
+    targetPort: 3306
+  selector:
+    app: mysql
+
