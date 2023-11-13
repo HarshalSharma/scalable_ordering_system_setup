@@ -9,7 +9,7 @@ spec:
       app: mysql
       app.kubernetes.io/name: mysql
   serviceName: mysql
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
